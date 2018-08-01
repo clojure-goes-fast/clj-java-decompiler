@@ -53,11 +53,9 @@ There are several usecases when you may want to use a Java decompiler:
 
 ## Usage
 
-Add to your dependencies:
+Add `com.clojure-goes-fast/clj-java-decompiler` to your dependencies:
 
-```clojure
-[com.clojure-goes-fast/clj-java-decompiler "0.1.0"]
-```
+[![](https://clojars.org/com.clojure-goes-fast/clj-java-decompiler/latest-version.svg)](https://clojars.org/com.clojure-goes-fast/clj-java-decompiler)
 
 Then, at the REPL:
 
