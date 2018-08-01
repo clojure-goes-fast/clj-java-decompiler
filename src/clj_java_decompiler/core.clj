@@ -30,10 +30,13 @@
 (defn- list-compiled-classes
   "Return the list of class files produced after AOT compilation."
   []
-  (let [all-files (filter (memfn ^File isFile) (file-seq tmp-dir))]
+  (let [all-files (filter (fn [^File f]
+                            (and (.isFile f)
+                                 (.endsWith ^String (.getName f) ".class")))
+                          (file-seq tmp-dir))]
     (if (= (count all-files) 1)
       all-files ;; 1 file means only wrapping ns was compiled - return it
-      (filter (fn [^File f] (not= (.getName f) "cjd__init.class")) all-files))))
+      (remove (fn [^File f] (= (.getName f) "cjd__init.class")) all-files))))
 
 (defn- cleanup-tmp-dir
   "Remove all files and directories from `tmp-dir`."
