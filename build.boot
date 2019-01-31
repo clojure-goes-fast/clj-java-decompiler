@@ -1,6 +1,6 @@
 (task-options!
  pom {:project     'com.clojure-goes-fast/clj-java-decompiler
-      :version     "0.1.1"
+      :version     "0.2.0"
       :description "Integrated Clojure-to-Java decompiler"
       :url         "https://github.com/clojure-goes-fast/clj-java-decompiler"
       :scm         {:url "https://github.com/clojure-goes-fast/clj-java-decompiler"}
@@ -10,7 +10,7 @@
 
 (set-env! :resource-paths #{"src"}
           :source-paths   #{"src"}
-          :dependencies   '[[org.clojure/clojure "1.9.0" :scope "provided"]
+          :dependencies   '[[org.clojure/clojure "1.10.0" :scope "provided"]
                             [org.bitbucket.mstrobel/procyon-compilertools "0.5.29"]])
 
 (deftask build
