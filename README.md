@@ -116,7 +116,7 @@ Lclojure/lang/Var;
               30: areturn
 ```
 
-For make the output clearer, clj-java-decompiler by default disables [locals
+To make the output clearer, clj-java-decompiler by default disables [locals
 clearing](https://clojuredocs.org/clojure.core/*compiler-options*) for the code
 it compiles. You can re-enable it by setting this compiler option to false
 explicitly, like this:

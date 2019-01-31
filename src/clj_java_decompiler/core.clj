@@ -119,7 +119,7 @@
 
   (decompile (fn [] (cond (= 1 2) 10 (= 1 3) 20 :else 40)))
 
-  (decompile '(let [x "baz"] (case x "foo" 2 "bar" 4 "baz" 20)))
+  (decompile (let [x "baz"] (case x "foo" 2 "bar" 4 "baz" 20)))
 
   (definterface ITest (^long method1 [^long x ^long y]))
   (decompile
