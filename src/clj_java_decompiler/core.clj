@@ -23,7 +23,10 @@
     (spit tmp-source (binding [*print-meta* true]
                        (pr-str form)))
     (binding [*compile-files* true
-              *compile-path* (str tmp-dir)]
+              *compile-path* (str tmp-dir)
+              *compiler-options* (cond-> *compiler-options*
+                                   (not (contains? *compiler-options* :disable-locals-clearing))
+                                   (assoc :disable-locals-clearing true))]
       (Compiler/compile (io/reader tmp-source) "cjd.clj" "cjd"))
     (.delete tmp-source)))
 
@@ -107,6 +110,10 @@
       (if (< i 0)
         sum
         (recur (unchecked-dec i) (unchecked-add sum i)))))
+
+  (decompile
+   (let [a "foo", b (str a "bar")]
+     (println a b)))
 
   (decompile (definterface ITest (method1 [x y])))
 

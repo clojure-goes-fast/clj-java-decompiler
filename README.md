@@ -116,6 +116,19 @@ Lclojure/lang/Var;
               30: areturn
 ```
 
+For make the output clearer, clj-java-decompiler by default disables [locals
+clearing](https://clojuredocs.org/clojure.core/*compiler-options*) for the code
+it compiles. You can re-enable it by setting this compiler option to false
+explicitly, like this:
+
+```clj
+(binding [*compiler-options* {:disable-locals-clearing false}]
+  (decompile ...))
+```
+
+You can also change other compiler options (static linking, metadata elision) in
+the same way.
+
 ## Comparison with no.disassemble
 
 [no.disassemble](https://github.com/gtrak/no.disassemble) (ND) is another tool
