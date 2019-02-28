@@ -57,7 +57,6 @@
 
 (def ^:private java-decompiler (Languages/java))
 (def ^:private bytecode-decompiler (Languages/bytecode))
-(def ^:private output (PlainTextOutput. *out*))
 
 (defn- decompile-classfile
   "Decompile the given classfile and print the result to stdout."
@@ -68,9 +67,11 @@
                      java-decompiler)
         decomp-options (doto (DecompilationOptions.)
                          (.setSettings (doto (DecompilerSettings.)
-                                         (.setSimplifyMemberReferences true))))]
+                                         (.setSimplifyMemberReferences true))))
+        output (PlainTextOutput.)]
     (println "\n// Decompiling class:" (.getInternalName type))
-    (.decompileType decompiler type output decomp-options)))
+    (.decompileType decompiler type output decomp-options)
+    (println (str output))))
 
 (defn decompile-form
   "Decompile the given form and print the result to stdout. `:decompiler` in
