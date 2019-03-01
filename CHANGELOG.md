@@ -1,5 +1,10 @@
 # Changelog
 
+### 0.2.1 (2019-03-01)
+
+- [#3](https://github.com/clojure-goes-fast/clj-java-decompiler/issues/3) Output
+  doesn't show up in latest CIDER.
+
 ### 0.2.0 (2019-01-31)
 
 - `:disable-locals-clearing` is now enabled by default when

@@ -1,6 +1,6 @@
 (task-options!
  pom {:project     'com.clojure-goes-fast/clj-java-decompiler
-      :version     "0.2.0"
+      :version     "0.2.1"
       :description "Integrated Clojure-to-Java decompiler"
       :url         "https://github.com/clojure-goes-fast/clj-java-decompiler"
       :scm         {:url "https://github.com/clojure-goes-fast/clj-java-decompiler"}

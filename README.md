@@ -150,4 +150,4 @@ substantially differs from clj-java-decompiler (CJD).
 clj-java-decompiler is distributed under the Eclipse Public License.
 See [LICENSE](LICENSE).
 
-Copyright 2018 Alexander Yakushev
+Copyright 2018-2019 Alexander Yakushev
