@@ -145,6 +145,22 @@ substantially differs from clj-java-decompiler (CJD).
 - ND can disassemble any already defined Clojure function. CJD needs the Clojure
   form to be passed directly to it.
 
+The last limitation comes from the fact that Java and Clojure don't keep the
+bytecode for classes it loaded anywhere. When the Clojure compiler compiles a
+piece of Clojure code, it transforms it into bytecode in memory, then loads with
+a classloader, and discards the bytecode.
+
+no.dissassemble works around this by being a Java agent which instruments the
+classloader to save all classes it ever loaded into an accessible hashmap, so
+that they can be retrieved later. This however means you must start the Clojure
+program with ND's agent on the classpath.
+
+So, you can't decompile an existing function definition with CJD. But if you are
+using CIDER, you can jump to the definition of the function you want to
+decompile, disable read-only mode (<kbd>C-x C-q</kbd>), wrap the `defn` form
+with `clj-java-decompiler.core/decompile` and recompile the form (<kbd>C-c
+C-c</kbd>).
+
 ## License
 
 clj-java-decompiler is distributed under the Eclipse Public License.
