@@ -11,7 +11,7 @@
 (set-env! :resource-paths #{"src"}
           :source-paths   #{"src"}
           :dependencies   '[[org.clojure/clojure "1.10.0" :scope "provided"]
-                            [org.bitbucket.mstrobel/procyon-compilertools "0.5.29"]])
+                            [org.bitbucket.mstrobel/procyon-compilertools "0.5.34"]])
 
 (deftask build
   "Build the project."
