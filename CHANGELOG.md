@@ -1,5 +1,10 @@
 # Changelog
 
+### master (unreleased)
+
+- [#4](https://github.com/clojure-goes-fast/clj-java-decompiler/issues/4)
+  Upgrade procyon to support JDK9+.
+
 ### 0.2.1 (2019-03-01)
 
 - [#3](https://github.com/clojure-goes-fast/clj-java-decompiler/issues/3) Output
