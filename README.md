@@ -150,7 +150,7 @@ bytecode for classes it loaded anywhere. When the Clojure compiler compiles a
 piece of Clojure code, it transforms it into bytecode in memory, then loads with
 a classloader, and discards the bytecode.
 
-no.dissassemble works around this by being a Java agent which instruments the
+no.disassemble works around this by being a Java agent which instruments the
 classloader to save all classes it ever loaded into an accessible hashmap, so
 that they can be retrieved later. This however means you must start the Clojure
 program with ND's agent on the classpath.
