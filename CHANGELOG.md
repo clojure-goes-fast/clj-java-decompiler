@@ -1,6 +1,6 @@
 # Changelog
 
-### master (unreleased)
+### 0.3.0 (2020-02-04)
 
 - [#4](https://github.com/clojure-goes-fast/clj-java-decompiler/issues/4)
   Upgrade procyon to support JDK9+.

@@ -166,4 +166,4 @@ C-c</kbd>).
 clj-java-decompiler is distributed under the Eclipse Public License.
 See [LICENSE](LICENSE).
 
-Copyright 2018-2019 Alexander Yakushev
+Copyright 2018-2020 Alexander Yakushev
