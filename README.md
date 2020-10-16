@@ -6,7 +6,7 @@ the
 
 This library is an integrated Clojure-to-Java decompiler usable from the REPL.
 It is a wrapper
-around [Procyon](https://bitbucket.org/mstrobel/procyon/overview) which is a
+around [Procyon](https://github.com/mstrobel/procyon) which is a
 suite of Java metaprogramming tools focused on code generation and analysis.
 
 Quick demo:
@@ -128,6 +128,19 @@ explicitly, like this:
 
 You can also change other compiler options (static linking, metadata elision) in
 the same way.
+
+### Usage from Emacs
+
+You can use [clj-decompiler.el](https://github.com/bsless/clj-decompiler.el)
+package (installable from MELPA) to fluidly invoke `clj-java-decompiler` right
+from your Clojure code buffer. Like with `cider-macroexpand`, you place your
+cursor at the end of the form you want to decompile and invoke `M-x
+clj-decompiler-decompile`. This will compile the form before the cursor, then
+decompile it with `clj-java-decompiler`, and present you the Java output in a
+separate syntax-highlighted buffer.
+
+`clj-decompiler.el` can also automatically inject `clj-java-decompiler`
+dependency at `cider-jack-in` time. Check its repository for more details.
 
 ## Comparison with no.disassemble
 
