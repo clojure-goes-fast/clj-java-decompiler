@@ -48,7 +48,9 @@
                           (file-seq tmp-dir))]
     (if (= (count all-files) 1)
       all-files ;; 1 file means only wrapping ns was compiled - return it
-      (remove (fn [^File f] (= (.getName f) "cjd__init.class")) all-files))))
+      (->> all-files
+           (remove #(= (.getName ^File %) "cjd__init.class"))
+           (sort-by #(.getName ^File %) #(.compareTo ^String %2 %1))))))
 
 (defn- cleanup-tmp-dir
   "Remove all files and directories from `tmp-dir`."
