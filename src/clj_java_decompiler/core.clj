@@ -1,5 +1,6 @@
 (ns clj-java-decompiler.core
-  (:require [clojure.java.io :as io])
+  (:require [clojure.java.io :as io]
+            [clojure.walk :as walk])
   (:import clojure.lang.Compiler
            com.strobel.assembler.InputTypeLoader
            (com.strobel.assembler.metadata DeobfuscationUtilities MetadataSystem
@@ -19,7 +20,15 @@
 (defn- aot-compile
   "Compile the form to classfiles in the temporary directory."
   [form]
-  (let [tmp-source (File/createTempFile "tmp-src" "" tmp-dir)]
+  (let [form (walk/prewalk
+              #(if (and (sequential? %) (not (vector? %))
+                        ('#{fn fn*} (first %)) (not (symbol? (second %))))
+                 (if-let [line (:line (meta %))]
+                   (list* 'fn (symbol (str "fn_line_" line)) (rest %))
+                   %)
+                 %)
+              form)
+        tmp-source (File/createTempFile "tmp-src" "" tmp-dir)]
     (spit tmp-source (binding [*print-meta* true]
                        (pr-str form)))
     (binding [*compile-files* true
