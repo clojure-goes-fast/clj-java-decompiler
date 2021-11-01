@@ -1,5 +1,10 @@
 # Changelog
 
+### 0.3.1 (2021-11-01)
+
+- Ensure consistent ordering of decompiled classes
+- Try to embed line location of lambdas into their names
+
 ### 0.3.0 (2020-02-04)
 
 - [#4](https://github.com/clojure-goes-fast/clj-java-decompiler/issues/4)
