@@ -102,3 +102,70 @@ public final class core_test$fn_line_91__<<<ignore>>> extends AFunction
         return invokeStatic();
     }
 }")))
+
+(deftest metadata-preserved-test
+  (is (=str (with-out-trimmed-str
+              (sut/decompile (defn hint-callsite [m] (.intValue ^Long (m 1)))))
+            "// Decompiling class: clj_java_decompiler/core_test$hint_callsite
+package clj_java_decompiler;
+import clojure.lang.*;
+public final class core_test$hint_callsite extends AFunction
+{
+    public static final Object const__0;
+    public static Object invokeStatic(final Object m) {
+        return ((Long)((IFn)m).invoke(core_test$hint_callsite.const__0)).intValue();
+    }
+    @Override
+    public Object invoke(final Object m) {
+        return invokeStatic(m);
+    }
+    static {
+        const__0 = 1L;
+    }
+}"))
+
+  (is (=str (with-out-trimmed-str
+              (sut/decompile (defn hint-let-symbol [m]
+                               (let [^Long l (m 1)]
+                                 (.intValue l)))))
+            "// Decompiling class: clj_java_decompiler/core_test$hint_let_symbol
+package clj_java_decompiler;
+import clojure.lang.*;
+public final class core_test$hint_let_symbol extends AFunction
+{
+    public static final Object const__0;
+    public static Object invokeStatic(final Object m) {
+        final Object l = ((IFn)m).invoke(core_test$hint_let_symbol.const__0);
+        return ((Long)l).intValue();
+    }
+    @Override
+    public Object invoke(final Object m) {
+        return invokeStatic(m);
+    }
+    static {
+        const__0 = 1L;
+    }
+}"))
+
+  (is (=str (with-out-trimmed-str
+              (sut/decompile (defn hint-let-value [m]
+                               (let [l ^Long (m 1)]
+                                 (.intValue l)))))
+            "// Decompiling class: clj_java_decompiler/core_test$hint_let_value
+package clj_java_decompiler;
+import clojure.lang.*;
+public final class core_test$hint_let_value extends AFunction
+{
+    public static final Object const__0;
+    public static Object invokeStatic(final Object m) {
+        final Object l = ((IFn)m).invoke(core_test$hint_let_value.const__0);
+        return ((Long)l).intValue();
+    }
+    @Override
+    public Object invoke(final Object m) {
+        return invokeStatic(m);
+    }
+    static {
+        const__0 = 1L;
+    }
+}")))
