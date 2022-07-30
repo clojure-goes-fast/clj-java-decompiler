@@ -1,0 +1,17 @@
+{:paths ["src"]
+ :deps {org.clojure/clojure {:mvn/version "1.11.1" :mvn/scope "provided"}
+        org.bitbucket.mstrobel/procyon-compilertools {:mvn/version "0.5.36"}}
+
+ :aliases
+ {:build {:deps {io.github.seancorfield/build-clj {:git/tag "v0.8.3"
+                                                   :git/sha "7ac1f8d"}}
+          :ns-default build
+          :ns-aliases {bb org.corfield.build}}
+
+  :1.9 {:override-deps {org.clojure/clojure {:mvn/version "1.9.0"}}}
+  :1.10 {:override-deps {org.clojure/clojure {:mvn/version "1.10.3"}}}
+
+  :test {:extra-paths ["test"]
+         :extra-deps {io.github.cognitect-labs/test-runner {:git/tag "v0.5.0"
+                                                            :git/sha "48c3c67"}}
+         :exec-fn cognitect.test-runner.api/test}}}
