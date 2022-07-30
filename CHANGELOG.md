@@ -1,5 +1,10 @@
 # Changelog
 
+### 0.3.2 (2022-07-30)
+
+- [#6](https://github.com/clojure-goes-fast/clj-java-decompiler/issues/6)
+  Preserve type hints and other metadata after code walking.
+
 ### 0.3.1 (2021-11-01)
 
 - Ensure consistent ordering of decompiled classes
