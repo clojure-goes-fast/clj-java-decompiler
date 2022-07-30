@@ -1,4 +1,4 @@
-# clj-java-decompiler
+# clj-java-decompiler [![CircleCI](https://dl.circleci.com/status-badge/img/gh/clojure-goes-fast/clj-java-decompiler/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/clojure-goes-fast/clj-java-decompiler/tree/master)
 
 _You can read the motivation behind clj-java-decompiler and the usage example in
 the
@@ -170,13 +170,15 @@ program with ND's agent on the classpath.
 
 So, you can't decompile an existing function definition with CJD. But if you are
 using CIDER, you can jump to the definition of the function you want to
-decompile, disable read-only mode (<kbd>C-x C-q</kbd>), wrap the `defn` form
-with `clj-java-decompiler.core/decompile` and recompile the form (<kbd>C-c
-C-c</kbd>).
+decompile and call `M-x clj-decompiler-decompile` on it. Alternatively, if you
+don't use `clj-decompiler.el`, you can disable read-only mode (<kbd>C-x
+C-q</kbd>) in the buffer of the existing function you want to decompile, wrap
+the `defn` form with `clj-java-decompiler.core/decompile` and recompile the form
+(<kbd>C-c C-c</kbd>).
 
 ## License
 
 clj-java-decompiler is distributed under the Eclipse Public License.
 See [LICENSE](LICENSE).
 
-Copyright 2018-2020 Alexander Yakushev
+Copyright 2018-2022 Alexander Yakushev
