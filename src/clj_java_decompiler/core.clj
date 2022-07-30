@@ -1,6 +1,5 @@
 (ns clj-java-decompiler.core
-  (:require [clojure.java.io :as io]
-            [clojure.walk :as walk])
+  (:require [clojure.java.io :as io])
   (:import clojure.lang.Compiler
            com.strobel.assembler.InputTypeLoader
            (com.strobel.assembler.metadata DeobfuscationUtilities MetadataSystem
@@ -17,17 +16,44 @@
 
 ;;;; Compilation
 
+(defn- walk-meta-preserving
+  "Like `clojure.walk/walk`, but preserves meta. Redundant after
+  https://clojure.atlassian.net/browse/CLJ-2568 is merged."
+  [inner outer form]
+  (let [restore-meta #(if-let [fm (meta form)]
+                        (with-meta %
+                          (merge fm (meta %)))
+                        %)]
+    (cond
+      (list? form) (outer (restore-meta (apply list (map inner form))))
+      (instance? clojure.lang.IMapEntry form)
+      (outer (clojure.lang.MapEntry/create (inner (key form)) (inner (val form))))
+      (seq? form) (outer (restore-meta (doall (map inner form))))
+      (instance? clojure.lang.IRecord form)
+      (outer (restore-meta (reduce (fn [r x] (conj r (inner x))) form form)))
+      (coll? form) (outer (restore-meta (into (empty form) (map inner form))))
+      :else (outer form))))
+
+(defn- prewalk [f form]
+  (walk-meta-preserving (partial prewalk f) identity (f form)))
+
+(defn- enrich-lambdas-with-line-numbers
+  "Walk the `form` and attach line number-derived names to nameless fns so that
+  they are easier to match to source code."
+  [form]
+  (prewalk
+   #(if (and (sequential? %) (not (vector? %))
+             ('#{fn fn*} (first %)) (not (symbol? (second %))))
+      (if-let [line (:line (meta %))]
+        (list* 'fn (symbol (str "fn_line_" line)) (rest %))
+        %)
+      %)
+   form))
+
 (defn- aot-compile
   "Compile the form to classfiles in the temporary directory."
   [form]
-  (let [form (walk/prewalk
-              #(if (and (sequential? %) (not (vector? %))
-                        ('#{fn fn*} (first %)) (not (symbol? (second %))))
-                 (if-let [line (:line (meta %))]
-                   (list* 'fn (symbol (str "fn_line_" line)) (rest %))
-                   %)
-                 %)
-              form)
+  (let [form (enrich-lambdas-with-line-numbers form)
         tmp-source (File/createTempFile "tmp-src" "" tmp-dir)]
     (spit tmp-source (binding [*print-meta* true]
                        (pr-str form)))
