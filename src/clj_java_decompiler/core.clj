@@ -1,5 +1,6 @@
 (ns clj-java-decompiler.core
-  (:require [clojure.java.io :as io])
+  (:require [clojure.java.io :as io]
+            [clojure.string :as str])
   (:import clojure.lang.Compiler
            com.strobel.assembler.InputTypeLoader
            (com.strobel.assembler.metadata DeobfuscationUtilities MetadataSystem
@@ -95,6 +96,16 @@
 (def ^:private java-decompiler (Languages/java))
 (def ^:private bytecode-decompiler (Languages/bytecode))
 
+(defn- postprocess-decompiler-output
+  "Try to detect the class prefix from the verbose static member references. This
+  function is a hacky solution to what `(.setSimplifyMemberReferences true)`
+  should have been doing if it worked."
+  [s]
+  (let [[_ classname] (re-find #"public final class ([^ ]+) " s)]
+    (if classname
+      (str/replace s (str classname ".") "")
+      s)))
+
 (defn- decompile-classfile
   "Decompile the given classfile and print the result to stdout."
   [file options]
@@ -108,7 +119,7 @@
         output (PlainTextOutput.)]
     (println "\n// Decompiling class:" (.getInternalName type))
     (.decompileType decompiler type output decomp-options)
-    (println (str output))))
+    (println (postprocess-decompiler-output (str output)))))
 
 (defn decompile-form
   "Decompile the given form and print the result to stdout. `:decompiler` in

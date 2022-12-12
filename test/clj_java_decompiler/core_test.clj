@@ -75,7 +75,7 @@ public final class core_test$hello extends AFunction
 {
     public static final Var const__0;
     public static Object invokeStatic() {
-        return ((IFn)core_test$hello.const__0.getRawRoot()).invoke(\"Hello, decompiler!\");
+        return ((IFn)const__0.getRawRoot()).invoke(\"Hello, decompiler!\");
     }
     @Override
     public Object invoke() {
@@ -113,7 +113,7 @@ public final class core_test$hint_callsite extends AFunction
 {
     public static final Object const__0;
     public static Object invokeStatic(final Object m) {
-        return ((Long)((IFn)m).invoke(core_test$hint_callsite.const__0)).intValue();
+        return ((Long)((IFn)m).invoke(const__0)).intValue();
     }
     @Override
     public Object invoke(final Object m) {
@@ -135,7 +135,7 @@ public final class core_test$hint_let_symbol extends AFunction
 {
     public static final Object const__0;
     public static Object invokeStatic(final Object m) {
-        final Object l = ((IFn)m).invoke(core_test$hint_let_symbol.const__0);
+        final Object l = ((IFn)m).invoke(const__0);
         return ((Long)l).intValue();
     }
     @Override
@@ -158,7 +158,7 @@ public final class core_test$hint_let_value extends AFunction
 {
     public static final Object const__0;
     public static Object invokeStatic(final Object m) {
-        final Object l = ((IFn)m).invoke(core_test$hint_let_value.const__0);
+        final Object l = ((IFn)m).invoke(const__0);
         return ((Long)l).intValue();
     }
     @Override
