@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.3.3 (2022-12-20)
+
+- Simplify member references using naive postprocessing.
+
 ### 0.3.2 (2022-07-30)
 
 - [#6](https://github.com/clojure-goes-fast/clj-java-decompiler/issues/6)
