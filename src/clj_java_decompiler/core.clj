@@ -96,15 +96,54 @@
 (def ^:private java-decompiler (Languages/java))
 (def ^:private bytecode-decompiler (Languages/bytecode))
 
+(defn- simplify-members
+  "Try to detect the class prefix from the verbose static member references. This
+  function is a hacky solution to what `(.setSimplifyMemberReferences true)`
+  should have been doing if it worked."
+  [s]
+  (if-let [[_ classname] (re-find #"public final class ([^ ]+) " s)]
+    (str/replace s (str classname ".") "")
+    s))
+
+(defn- replace-consts-with-var-names
+  "Replace static references to Vars (`const__X`) with explicit var names. Not
+  that it also hides `getVarRoot()` calls and IFn casts for decluttering."
+  [s]
+  (let [shorten-ns
+        (fn [s]
+          (let [parts (str/split s #"\.")]
+            (str (str/join (map #(if (> (count %) 0) (subs % 0 1) %) (butlast parts)))
+                 (last parts))))
+        munge #(str/replace (Compiler/munge %) #"\." "_")
+        rx #"(const__\d+) = RT\.var\(\"([^\"]+)\", \"([^\"]+)\"\);"
+        lines (keep #(when-let [[_ const ns name] (re-find rx %)]
+                       [const
+                        (if (= ns "clojure.core")
+                          (str "__" (munge name))
+                          (str "__" (munge (shorten-ns ns)) "_" (munge name)))])
+                    (str/split-lines s))
+        vars (into {} lines)]
+    (-> s
+        (str/replace #"\(\(IFn\)(const__\d+)\.getRawRoot\(\)\)"
+                     (fn [[whole const]]
+                       (or (vars const) whole)))
+        (str/replace #"(const__\d+)"
+                     (fn [[whole const]]
+                       (or (vars const) whole))))))
+
+(def postprocessing-enabled
+  "When enabled, decompiler will remove current class name from static references
+  and replace opaque `const__` fields with more informative var names."
+  (atom true))
+
 (defn- postprocess-decompiler-output
   "Try to detect the class prefix from the verbose static member references. This
   function is a hacky solution to what `(.setSimplifyMemberReferences true)`
   should have been doing if it worked."
   [s]
-  (let [[_ classname] (re-find #"public final class ([^ ]+) " s)]
-    (if classname
-      (str/replace s (str classname ".") "")
-      s)))
+  (if @postprocessing-enabled
+    (-> s simplify-members replace-consts-with-var-names)
+    s))
 
 (defn- decompile-classfile
   "Decompile the given classfile and print the result to stdout."

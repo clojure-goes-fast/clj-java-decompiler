@@ -1,8 +1,12 @@
 # Changelog
 
+### master (unreleased)
+
+- Replace `const__` references with var names during post-processing.
+
 ### 0.3.3 (2022-12-20)
 
-- Simplify member references using naive postprocessing.
+- Simplify member references using naive post-processing.
 
 ### 0.3.2 (2022-07-30)
 

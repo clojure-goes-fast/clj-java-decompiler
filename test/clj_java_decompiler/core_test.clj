@@ -73,9 +73,31 @@ package clj_java_decompiler;
 import clojure.lang.*;
 public final class core_test$hello extends AFunction
 {
+    public static final Var __println;
+    public static Object invokeStatic() {
+        return __println.invoke(\"Hello, decompiler!\");
+    }
+    @Override
+    public Object invoke() {
+        return invokeStatic();
+    }
+    static {
+        __println = RT.var(\"clojure.core\", \"println\");
+    }
+}")
+
+  (reset! sut/postprocessing-enabled false)
+
+  (=str (with-out-trimmed-str
+          (sut/decompile (defn hello [] (println "Hello, decompiler!"))))
+        "// Decompiling class: clj_java_decompiler/core_test$hello
+package clj_java_decompiler;
+import clojure.lang.*;
+public final class core_test$hello extends AFunction
+{
     public static final Var const__0;
     public static Object invokeStatic() {
-        return ((IFn)const__0.getRawRoot()).invoke(\"Hello, decompiler!\");
+        return ((IFn)core_test$hello.const__0.getRawRoot()).invoke(\"Hello, decompiler!\");
     }
     @Override
     public Object invoke() {
@@ -84,15 +106,17 @@ public final class core_test$hello extends AFunction
     static {
         const__0 = RT.var(\"clojure.core\", \"println\");
     }
-}"))
+}")
+
+  (reset! sut/postprocessing-enabled true))
 
 (deftest lambda-linenumber-test
   (is (=str (with-out-trimmed-str
               (sut/decompile (fn [] (+ 1 2))))
-            "// Decompiling class: clj_java_decompiler/core_test$fn_line_91__<<<ignore>>>
+            "// Decompiling class: clj_java_decompiler/core_test$fn_line_115__<<<ignore>>>
 package clj_java_decompiler;
 import clojure.lang.*;
-public final class core_test$fn_line_91__<<<ignore>>> extends AFunction
+public final class core_test$fn_line_115__<<<ignore>>> extends AFunction
 {
     public static Object invokeStatic() {
         return Numbers.num(Numbers.add(1L, 2L));

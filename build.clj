@@ -8,7 +8,7 @@
 (defmacro opts+ []
   `(assoc ~'opts
           :lib 'com.clojure-goes-fast/clj-java-decompiler
-          :version "0.3.3"
+          :version "0.3.4-SNAPSHOT"
           :resource-dirs []
           :src-pom "res/pom-template.xml"))
 
