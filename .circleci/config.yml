@@ -30,7 +30,6 @@ workflows:
               docker-image:
                 - clojure:openjdk-8-bullseye
                 - clojure:openjdk-11-bullseye
-                - clojure:openjdk-14-tools-deps
               clj-version: ["1.9", "1.10", "1.11"]
       - test:
           matrix:
