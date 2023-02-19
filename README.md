@@ -1,4 +1,4 @@
-# clj-java-decompiler [![CircleCI](https://img.shields.io/circleci/build/github/clojure-goes-fast/clj-java-decompiler/master.svg)](https://dl.circleci.com/status-badge/redirect/gh/clojure-goes-fast/clj-java-decompiler/tree/master) [![](https://img.shields.io/badge/-changelog-blue.svg)](CHANGELOG.md)
+# clj-java-decompiler [![CircleCI](https://img.shields.io/circleci/build/github/clojure-goes-fast/clj-java-decompiler/master.svg)](https://dl.circleci.com/status-badge/redirect/gh/clojure-goes-fast/clj-java-decompiler/tree/master) [![](https://img.shields.io/clojars/dt/com.clojure-goes-fast/clj-java-decompiler?color=teal)](https://clojars.org/com.clojure-goes-fast/clj-java-decompiler) [![](https://img.shields.io/badge/-changelog-blue.svg)](CHANGELOG.md)
 
 _You can read the motivation behind clj-java-decompiler and the usage example in
 the
@@ -153,39 +153,32 @@ separate syntax-highlighted buffer.
 `clj-decompiler.el` can also automatically inject `clj-java-decompiler`
 dependency at `cider-jack-in` time. Check its repository for more details.
 
-## Comparison with no.disassemble
+### How to decompile an already defined function
 
-[no.disassemble](https://github.com/gtrak/no.disassemble) (ND) is another tool
-that lets you inspect what the Clojure code compiles to. However, it
-substantially differs from clj-java-decompiler (CJD).
+Short answer: you can't do that. JVM doesn't retain the bytecode for classes it
+has already loaded. When the Clojure compiler compiles a piece of Clojure code,
+it transforms it into bytecode in memory, then loads it with a classloader, and
+discards the bytecode. So, in order to decompile a function, you must pass its
+source code to the `decompile` macro.
 
-- ND can only disassemble the compiled code to bytecode representation. CJD
-  decompiles the code into Java which is much easier to comprehend.
-- ND requires its agent to be present at the application startup. You either
-  have to add the agent to JVM options manually or start the REPL with its
-  Leiningen plugin. CJD can be loaded into any REPL dynamically.
-- ND tracks every class that was loaded since the beginning of the program, so
-  it has memory overhead. CJD bears no overhead.
-- ND can disassemble any already defined Clojure function. CJD needs the Clojure
-  form to be passed directly to it.
+Fortunately, most Clojure libraries are distributed in the source form. If you
+use CIDER or any other Clojure IDE, you can jump to the definition of the
+function you want to decompile, disable read-only mode (in Emacs, that is done
+with <kbd>C-x C-q</kbd>), wrap the `defn` form with
+`clj-java-decompiler.core/decompile` and recompile the form (<kbd>C-c C-c</kbd>
+in Emacs). This becomes much simpler if you use
+[clj-decompiler.el](https://github.com/bsless/clj-decompiler.el), you just call
+`M-x clj-decompiler-decompile` on the function you've jumped to.
 
-The last limitation comes from the fact that Java and Clojure don't keep the
-bytecode for classes it loaded anywhere. When the Clojure compiler compiles a
-piece of Clojure code, it transforms it into bytecode in memory, then loads with
-a classloader, and discards the bytecode.
+If you absolutely need to decompile a loaded function for which the source code
+is not available, you can consider trying the
+[no.disassemble](https://github.com/gtrak/no.disassemble) library. Note that it
+must be loaded into the JVM at startup time as an agent and can only disassemble
+functions into bytecode representation (not decompile into Java code).
 
-no.disassemble works around this by being a Java agent which instruments the
-classloader to save all classes it ever loaded into an accessible hashmap, so
-that they can be retrieved later. This however means you must start the Clojure
-program with ND's agent on the classpath.
-
-So, you can't decompile an existing function definition with CJD. But if you are
-using CIDER, you can jump to the definition of the function you want to
-decompile and call `M-x clj-decompiler-decompile` on it. Alternatively, if you
-don't use `clj-decompiler.el`, you can disable read-only mode (<kbd>C-x
-C-q</kbd>) in the buffer of the existing function you want to decompile, wrap
-the `defn` form with `clj-java-decompiler.core/decompile` and recompile the form
-(<kbd>C-c C-c</kbd>).
+Another option for when you have no source code but compiled `.class` files is
+to use one of the available [Java
+decompilers](http://clojure-goes-fast.com/blog/introspection-tools-java-decompilers/).
 
 ## License
 
