@@ -1,8 +1,10 @@
 # Changelog
 
-### master (unreleased)
+### 0.3.4 (2023-03-09)
 
 - Replace `const__` references with var names during post-processing.
+- [#12](https://github.com/clojure-goes-fast/clj-java-decompiler/issues/12) Fix
+  compatibility with JDK19.
 
 ### 0.3.3 (2022-12-20)
 
