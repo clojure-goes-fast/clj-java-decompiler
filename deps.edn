@@ -8,9 +8,8 @@
           :ns-default build
           :ns-aliases {bb org.corfield.build}}
 
-  :1.9 {:override-deps {org.clojure/clojure {:mvn/version "1.9.0"}}}
   :1.10 {:override-deps {org.clojure/clojure {:mvn/version "1.10.3"}}}
-  :1.12 {:override-deps {org.clojure/clojure {:mvn/version "1.12.0-alpha3"}}}
+  :1.12 {:override-deps {org.clojure/clojure {:mvn/version "1.12.0-alpha4"}}}
 
   :test {:extra-paths ["test"]
          :extra-deps {io.github.cognitect-labs/test-runner {:git/tag "v0.5.1"
