@@ -106,7 +106,7 @@
     s))
 
 (defn- replace-consts-with-var-names
-  "Replace static references to Vars (`const__X`) with explicit var names. Not
+  "Replace static references to Vars (`const__X`) with explicit var names. Note
   that it also hides `getVarRoot()` calls and IFn casts for decluttering."
   [s]
   (let [shorten-ns
@@ -132,14 +132,12 @@
                        (or (vars const) whole))))))
 
 (def postprocessing-enabled
-  "When enabled, decompiler will remove current class name from static references
-  and replace opaque `const__` fields with more informative var names."
+  "Enables `postprocess-decompiler-output`."
   (atom true))
 
 (defn- postprocess-decompiler-output
-  "Try to detect the class prefix from the verbose static member references. This
-  function is a hacky solution to what `(.setSimplifyMemberReferences true)`
-  should have been doing if it worked."
+  "If `postprocessing-enabled` atom is true, remove the class prefix from the
+  verbose static member references and makes Var references more readable."
   [s]
   (if @postprocessing-enabled
     (-> s simplify-members replace-consts-with-var-names)
@@ -167,7 +165,6 @@
   (try
     (aot-compile form)
     (run! #(decompile-classfile % options) (list-compiled-classes))
-    (catch Exception ex (throw ex))
     (finally (cleanup-tmp-dir))))
 
 (defmacro decompile
