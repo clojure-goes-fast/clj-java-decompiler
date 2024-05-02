@@ -4,6 +4,11 @@
             clojure.pprint
             [clojure.string :as str]))
 
+;; Sanity check we run the Clojure version which we think we do.
+(is (let [v (System/getenv "CLOJURE_VERSION")]
+      (println "Running on Clojure" (clojure-version))
+      (or (nil? v) (.startsWith (clojure-version) v))))
+
 (defn ns-fixture
   [f]
   (in-ns 'clj-java-decompiler.core-test)
@@ -113,10 +118,10 @@ public final class core_test$hello extends AFunction
 (deftest lambda-linenumber-test
   (is (=str (with-out-trimmed-str
               (sut/decompile (fn [] (+ 1 2))))
-            "// Decompiling class: clj_java_decompiler/core_test$fn_line_115__<<<ignore>>>
+            "// Decompiling class: clj_java_decompiler/core_test$fn_line_120__<<<ignore>>>
 package clj_java_decompiler;
 import clojure.lang.*;
-public final class core_test$fn_line_115__<<<ignore>>> extends AFunction
+public final class core_test$fn_line_120__<<<ignore>>> extends AFunction
 {
     public static Object invokeStatic() {
         return Numbers.num(Numbers.add(1L, 2L));
