@@ -4,10 +4,10 @@
             clojure.pprint
             [clojure.string :as str]))
 
-;; Sanity check we run the Clojure version which we think we do.
-(is (let [v (System/getenv "CLOJURE_VERSION")]
-      (println "Running on Clojure" (clojure-version))
-      (or (nil? v) (.startsWith (clojure-version) v))))
+(deftest clojure-version-sanity-check
+  (is (let [v (System/getenv "CLOJURE_VERSION")]
+        (println "Running on Clojure" (clojure-version) ", expected:" v)
+        (or (nil? v) (.startsWith ^String (clojure-version) v)))))
 
 (defn ns-fixture
   [f]
