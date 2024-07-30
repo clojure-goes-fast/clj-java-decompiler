@@ -47,7 +47,7 @@
   "Compile and package the JAR."
   [opts]
   (opts+
-    (doto opts clean javac b/write-pom)
+    (doto opts clean b/write-pom)
     (let [{:keys [class-dir basis]} opts
           jar (jar-file opts)]
       (println (format "Building %s..." jar))
