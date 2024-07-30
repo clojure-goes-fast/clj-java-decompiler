@@ -68,16 +68,19 @@
 
 (defn- list-compiled-classes
   "Return the list of class files produced after AOT compilation."
-  []
-  (let [all-files (filter (fn [^File f]
-                            (and (.isFile f)
-                                 (.endsWith ^String (.getName f) ".class")))
-                          (file-seq tmp-dir))]
-    (if (= (count all-files) 1)
-      all-files ;; 1 file means only wrapping ns was compiled - return it
-      (->> all-files
-           (remove #(= (.getName ^File %) "cjd__init.class"))
-           (sort-by #(.getName ^File %) #(.compareTo ^String %2 %1))))))
+  [first-sym]
+  (let [all-files (->> (file-seq tmp-dir)
+                       (filter (fn [^File f]
+                                 (and (.isFile f)
+                                      (.endsWith (.getName f) ".class"))))
+                       (sort-by #(.getName ^File %)
+                                #(.compareTo ^String %2 %1)))]
+    (cond->> all-files
+      ;; Special case: when decompiling a defn or defmacro form and there are
+      ;; several classes, don't show the wrapping namespace class. This is
+      ;; purely cosmetical, so the heuristic is OK to be so lax.
+      (and (> (count all-files) 1) ('#{defn defmacro} first-sym))
+      (remove #(= (.getName ^File %) "cjd__init.class")))))
 
 (defn- cleanup-tmp-dir
   "Remove all files and directories from `tmp-dir`."
@@ -164,7 +167,8 @@
   [options form]
   (try
     (aot-compile form)
-    (run! #(decompile-classfile % options) (list-compiled-classes))
+    (let [first-sym (when (seq? form) (first form))]
+      (run! #(decompile-classfile % options) (list-compiled-classes first-sym)))
     (finally (cleanup-tmp-dir))))
 
 (defmacro decompile
@@ -199,6 +203,11 @@
   (decompile
    (let [a "foo", b (str a "bar")]
      (println a b)))
+
+  (decompile
+   (when true
+     (+ 1 2)
+     (defn foo [a b] (+ a b))))
 
   (decompile (definterface ITest (method1 [x y])))
 

@@ -216,3 +216,53 @@ public final class core_test$fn__<<<ignore>>> extends AFunction
         return ((ForkJoinPool)pool).submit((Runnable)new core_test$fn__<<<ignore>>>));
     }
 <<<anything>>>")))
+
+(deftest wrapping-namespace-omitted-test
+  (is (=str (with-out-trimmed-str
+              (sut/decompile (defn foo [a b] (+ 1 2))))
+            "// Decompiling class: clj_java_decompiler/core_test$foo
+package clj_java_decompiler;
+import clojure.lang.*;
+public final class core_test$foo extends AFunction
+{
+    public static Object invokeStatic(final Object a, final Object b) {
+        return Numbers.num(Numbers.add(1L, 2L));
+    }
+    @Override
+    public Object invoke(final Object a, final Object b) {
+        return invokeStatic(a, b);
+    }
+}"))
+
+  (is (=str (with-out-trimmed-str
+              (sut/decompile (do (+ 1 2)
+                                 (defn foo [a b] (+ 1 2)))))
+            "// Decompiling class: clj_java_decompiler/core_test$foo
+package clj_java_decompiler;
+import clojure.lang.*;
+public final class core_test$foo extends AFunction
+{
+    public static Object invokeStatic(final Object a, final Object b) {
+        return Numbers.num(Numbers.add(1L, 2L));
+    }
+    @Override
+    public Object invoke(final Object a, final Object b) {
+        return invokeStatic(a, b);
+    }
+}
+// Decompiling class: cjd__init
+import clj_java_decompiler.*;
+import java.util.*;
+import clojure.lang.*;
+public class cjd__init
+{
+    public static final Var __ccore_test_foo;
+    public static final AFn const__11;
+    public static void load() {
+        Numbers.num(Numbers.add(1L, 2L));
+        final Var __ccore_test_foo = cjd__init.__ccore_test_foo;
+        __ccore_test_foo.setMeta((IPersistentMap)cjd__init.const__11);
+        __ccore_test_foo.bindRoot(new core_test$foo());
+    }
+<<<anything>>>
+")))
