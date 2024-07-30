@@ -1,8 +1,9 @@
 # Changelog
 
-### 0.3.5 (2024-07-30)
+### 0.3.6 (2024-07-30)
 
 - Preserve function metadata when adding line numbers to lambdas.
+- Improve heuristic of hiding the wrapper class.
 
 ### 0.3.4 (2023-03-09)
 

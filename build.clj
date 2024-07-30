@@ -6,7 +6,7 @@
 
 (def default-opts
   (let [url "https://github.com/clojure-goes-fast/clj-java-decompiler"
-        version "0.3.5"]
+        version "0.3.6"]
     {;; Pom section
      :lib 'com.clojure-goes-fast/clj-java-decompiler
      :version version
