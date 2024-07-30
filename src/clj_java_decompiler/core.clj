@@ -46,7 +46,7 @@
    #(if (and (sequential? %) (not (vector? %))
              ('#{fn fn*} (first %)) (not (symbol? (second %))))
       (if-let [line (:line (meta %))]
-        (list* 'fn (symbol (str "fn_line_" line)) (rest %))
+        (with-meta (list* 'fn (symbol (str "fn_line_" line)) (rest %)) (meta %))
         %)
       %)
    form))

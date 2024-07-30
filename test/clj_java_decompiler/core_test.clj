@@ -197,4 +197,22 @@ public final class core_test$hint_let_value extends AFunction
     static {
         const__0 = 1L;
     }
-}")))
+}"))
+
+  (testing "metadata is preserved on fns"
+    (=str (with-out-trimmed-str
+            (sut/decompile
+             (let [pool (java.util.concurrent.ForkJoinPool/commonPool)]
+               (.submit pool ^Runnable (fn [] 1)))))
+          "// Decompiling class: clj_java_decompiler/core_test$fn__<<<ignore>>>
+package clj_java_decompiler;
+import java.util.concurrent.*;
+import clojure.lang.*;
+public final class core_test$fn__<<<ignore>>> extends AFunction
+{
+    public static final AFn const__<<<ignore>>>;
+    public static Object invokeStatic() {
+        final Object pool = ForkJoinPool.commonPool();
+        return ((ForkJoinPool)pool).submit((Runnable)new core_test$fn__<<<ignore>>>));
+    }
+<<<anything>>>")))
