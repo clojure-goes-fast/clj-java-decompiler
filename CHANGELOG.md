@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.3.5 (2024-07-30)
+
+- Preserve function metadata when adding line numbers to lambdas.
+
 ### 0.3.4 (2023-03-09)
 
 - Replace `const__` references with var names during post-processing.
