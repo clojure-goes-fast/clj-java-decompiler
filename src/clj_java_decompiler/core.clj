@@ -9,6 +9,11 @@
            (com.strobel.decompiler DecompilationOptions DecompilerSettings
                                    PlainTextOutput)
            com.strobel.decompiler.languages.Languages
+           (org.benf.cfr.reader.api CfrDriver$Builder
+                                    OutputSinkFactory
+                                    OutputSinkFactory$Sink
+                                    OutputSinkFactory$SinkClass
+                                    OutputSinkFactory$SinkType)
            java.io.File))
 
 (defonce ^:private tmp-dir
@@ -146,19 +151,34 @@
     (-> s simplify-members replace-consts-with-var-names)
     s))
 
-(defn- decompile-classfile
+(defn- bytecode-decompile-classfile
   "Decompile the given classfile and print the result to stdout."
-  [file options]
-  (let [type (resolve-class-from-file file)
-        decompiler (if (= (:decompiler options) :bytecode)
-                     bytecode-decompiler
-                     java-decompiler)
+  [file]
+  (let [type' (resolve-class-from-file file)
         decomp-options (doto (DecompilationOptions.)
                          (.setSettings (doto (DecompilerSettings.)
                                          (.setSimplifyMemberReferences true))))
         output (PlainTextOutput.)]
-    (println "\n// Decompiling class:" (.getInternalName type))
-    (.decompileType decompiler type output decomp-options)
+    (.decompileType bytecode-decompiler type' output decomp-options)
+    (println (postprocess-decompiler-output (str output)))))
+
+(defn- java-decompile-classfile
+  [file]
+  (let [output (java.io.StringWriter.)
+        sink (reify OutputSinkFactory
+               (getSupportedSinks [_ _ _]
+                 [OutputSinkFactory$SinkClass/STRING])
+               (getSink [_ sink-type _]
+                 (reify OutputSinkFactory$Sink
+                   (write
+                     [_ obj]
+                     (when (= OutputSinkFactory$SinkType/JAVA sink-type)
+                       (.append output (str obj)))))))
+        cfr-driver (.. (CfrDriver$Builder.)
+                       (withOutputSink sink)
+                       (withBuiltOptions nil)
+                       (build))]
+    (.analyse cfr-driver [(str file)])
     (println (postprocess-decompiler-output (str output)))))
 
 (defn decompile-form
@@ -167,8 +187,14 @@
   [options form]
   (try
     (aot-compile form)
-    (let [first-sym (when (seq? form) (first form))]
-      (run! #(decompile-classfile % options) (list-compiled-classes first-sym)))
+    (let [first-sym (when (seq? form) (first form))
+          files (list-compiled-classes first-sym)
+          decompiler (if (= (:decompiler options) :bytecode)
+                     bytecode-decompile-classfile
+                     java-decompile-classfile)]
+      (doseq [file files]
+        (println "\n// Decompiling class:" (.getInternalName (resolve-class-from-file file)))
+        (decompiler file)))
     (finally (cleanup-tmp-dir))))
 
 (defmacro decompile
@@ -184,6 +210,8 @@
 
 (comment
 
+  (decompile (str "hello"))
+
   (binding [*compiler-options* {:direct-linking true}]
     (decompile
       (defn turtles "mydocs" []
@@ -191,6 +219,12 @@
 
   (binding [*compiler-options* {:direct-linking true}]
     (decompile (fn [] (println (str "Hello, decompiler!")))))
+
+  (decompile
+   (letfn [(foo [s]
+                (println
+                 (str "Hello," s " decompiler!")))]
+     (foo "world and")))
 
   (disassemble (fn [] (println "Hello, decompiler!")))
 

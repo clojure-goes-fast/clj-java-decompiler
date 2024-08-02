@@ -1,6 +1,8 @@
 {:paths ["src"]
  :deps {org.clojure/clojure {:mvn/version "1.11.3" :mvn/scope "provided"}
-        org.bitbucket.mstrobel/procyon-compilertools {:mvn/version "0.6.0"}}
+        org.bitbucket.mstrobel/procyon-compilertools {:mvn/version "0.6.0"}
+        org.benf/cfr {:mvn/version "0.152"}
+        }
 
  :aliases
  {:build {:deps {io.github.clojure/tools.build {:mvn/version "0.10.0"}
