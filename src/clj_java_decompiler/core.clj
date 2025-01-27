@@ -5,10 +5,10 @@
            com.strobel.assembler.InputTypeLoader
            (com.strobel.assembler.metadata DeobfuscationUtilities MetadataSystem
                                            IMetadataResolver MetadataParser
-                                           TypeReference)
+                                           TypeDefinition TypeReference)
            (com.strobel.decompiler DecompilationOptions DecompilerSettings
                                    PlainTextOutput)
-           com.strobel.decompiler.languages.Languages
+           (com.strobel.decompiler.languages Language Languages)
            java.io.File))
 
 (defonce ^:private tmp-dir
@@ -92,7 +92,7 @@
 
 (defn- resolve-class-from-file
   "Read and process the given classfile with Procyon."
-  [file]
+  ^TypeDefinition [file]
   (doto (.resolve (.lookupType (MetadataSystem. (InputTypeLoader.)) (str file)))
     (DeobfuscationUtilities/processType)))
 
@@ -158,7 +158,7 @@
                                          (.setSimplifyMemberReferences true))))
         output (PlainTextOutput.)]
     (println "\n// Decompiling class:" (.getInternalName type))
-    (.decompileType decompiler type output decomp-options)
+    (.decompileType ^Language decompiler type output decomp-options)
     (println (postprocess-decompiler-output (str output)))))
 
 (defn decompile-form
