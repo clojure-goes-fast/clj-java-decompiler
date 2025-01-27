@@ -1,5 +1,10 @@
 # Changelog
 
+### 0.3.7 (2025-01-28)
+
+- [#14](https://github.com/clojure-goes-fast/clj-java-decompiler/issues/14) Get
+  rid of all reflection warnings.
+
 ### 0.3.6 (2024-07-30)
 
 - Preserve function metadata when adding line numbers to lambdas.
