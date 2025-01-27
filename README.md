@@ -185,4 +185,4 @@ decompilers](http://clojure-goes-fast.com/blog/introspection-tools-java-decompil
 clj-java-decompiler is distributed under the Eclipse Public License.
 See [LICENSE](LICENSE).
 
-Copyright 2018-2024 Alexander Yakushev
+Copyright 2018-2025 Alexander Yakushev
